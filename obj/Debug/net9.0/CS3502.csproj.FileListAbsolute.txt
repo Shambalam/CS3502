@@ -1,0 +1,5 @@
+/home/daniel/Downloads/CS3502/obj/Debug/net9.0/CS3502.GeneratedMSBuildEditorConfig.editorconfig
+/home/daniel/Downloads/CS3502/obj/Debug/net9.0/CS3502.AssemblyInfoInputs.cache
+/home/daniel/Downloads/CS3502/obj/Debug/net9.0/CS3502.AssemblyInfo.cs
+/home/daniel/Downloads/CS3502/obj/Debug/net9.0/CS3502.csproj.CoreCompileInputs.cache
+/home/daniel/Downloads/CS3502/obj/Debug/net9.0/CS3502.MvcApplicationPartsAssemblyInfo.cache
