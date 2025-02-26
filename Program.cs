@@ -4,8 +4,12 @@ using System.Threading;
 class BankAccount
 {
     private int balance;
-    private Mutex mutex = new Mutex();  // Mutex for thread-safe balance access
+    private Mutex _mutex = new Mutex();  // Mutex for thread-safe balance access
 
+    public Mutex GetMutex()
+    {
+        return _mutex;
+    }
     public BankAccount(int initialBalance)
     {
         balance = initialBalance;
@@ -13,20 +17,20 @@ class BankAccount
 
     public int GetBalance()
     {
-        mutex.WaitOne();
+        _mutex.WaitOne();
         try
         {
             return balance;
         }
         finally
         {
-            mutex.ReleaseMutex();
+            _mutex.ReleaseMutex();
         }
     }
 
     public void SetBalance(int amount)
     {
-        mutex.WaitOne();
+        _mutex.WaitOne();
         try
         {
             balance = amount;
@@ -34,13 +38,13 @@ class BankAccount
         }
         finally
         {
-            mutex.ReleaseMutex();
+            _mutex.ReleaseMutex();
         }
     }
 
     public void Deposit(int amount)
     {
-        mutex.WaitOne();  // Lock access to balance
+        _mutex.WaitOne();  // Lock access to balance
         try
         {
             balance += amount;
@@ -48,13 +52,13 @@ class BankAccount
         }
         finally
         {
-            mutex.ReleaseMutex();
+            _mutex.ReleaseMutex();
         }
     }
 
     public void Withdraw(int amount)
     {
-        mutex.WaitOne();
+        _mutex.WaitOne();
         try
         {
             if (balance >= amount)
@@ -69,7 +73,7 @@ class BankAccount
         }
         finally
         {
-            mutex.ReleaseMutex();
+            _mutex.ReleaseMutex();
         }
     }
 }
@@ -84,7 +88,7 @@ class Program
 
         try
         {
-            fromLocked = from.mutex.WaitOne(1000); // Try acquiring first lock
+            fromLocked = from.GetMutex().WaitOne(1000); // Try acquiring first lock
             if (!fromLocked)
             {
                 Console.WriteLine("Failed to lock first account, retrying...");
@@ -93,7 +97,7 @@ class Program
 
             Thread.Sleep(100);  // Simulate delay to potentially cause deadlock
 
-            toLocked = to.mutex.WaitOne(1000); // Try acquiring second lock
+            toLocked = to.GetMutex().WaitOne(1000); // Try acquiring second lock
             if (!toLocked)
             {
                 Console.WriteLine("Failed to lock second account, retrying...");
@@ -114,8 +118,8 @@ class Program
         }
         finally
         {
-            if (fromLocked) from.mutex.ReleaseMutex();
-            if (toLocked) to.mutex.ReleaseMutex();
+            if (fromLocked) from.GetMutex().ReleaseMutex();
+            if (toLocked) to.GetMutex().ReleaseMutex();
         }
     }
 
