@@ -43,39 +43,44 @@ class BankAccount
     }
 
     public void Deposit(int amount)
+{
+    Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Waiting to deposit {amount}...");
+    _mutex.WaitOne();  // Lock access to balance
+    try
     {
-        _mutex.WaitOne();  // Lock access to balance
-        try
-        {
-            balance += amount;
-            Console.WriteLine($"Deposited {amount}. New balance: {balance}");
-        }
-        finally
-        {
-            _mutex.ReleaseMutex();
-        }
+        Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Depositing {amount}...");
+        balance += amount;
+        Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] New balance: {balance}");
     }
+    finally
+    {
+        _mutex.ReleaseMutex();
+    }
+}
 
-    public void Withdraw(int amount)
+public void Withdraw(int amount)
+{
+    Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Waiting to withdraw {amount}...");
+    _mutex.WaitOne();
+    try
     {
-        _mutex.WaitOne();
-        try
+        if (balance >= amount)
         {
-            if (balance >= amount)
-            {
-                balance -= amount;
-                Console.WriteLine($"Withdrew {amount}. New balance: {balance}");
-            }
-            else
-            {
-                Console.WriteLine($"Insufficient funds. Balance: {balance}");
-            }
+            Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Withdrawing {amount}...");
+            balance -= amount;
+            Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] New balance: {balance}");
         }
-        finally
+        else
         {
-            _mutex.ReleaseMutex();
+            Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Insufficient funds! Balance: {balance}");
         }
     }
+    finally
+    {
+        _mutex.ReleaseMutex();
+    }
+}
+
 }
 
 class Program
