@@ -1,0 +1,14 @@
+/home/daniel/Downloads/IPCChild/bin/Debug/net9.0/IPCChild
+/home/daniel/Downloads/IPCChild/bin/Debug/net9.0/IPCChild.deps.json
+/home/daniel/Downloads/IPCChild/bin/Debug/net9.0/IPCChild.runtimeconfig.json
+/home/daniel/Downloads/IPCChild/bin/Debug/net9.0/IPCChild.dll
+/home/daniel/Downloads/IPCChild/bin/Debug/net9.0/IPCChild.pdb
+/home/daniel/Downloads/IPCChild/obj/Debug/net9.0/IPCChild.GeneratedMSBuildEditorConfig.editorconfig
+/home/daniel/Downloads/IPCChild/obj/Debug/net9.0/IPCChild.AssemblyInfoInputs.cache
+/home/daniel/Downloads/IPCChild/obj/Debug/net9.0/IPCChild.AssemblyInfo.cs
+/home/daniel/Downloads/IPCChild/obj/Debug/net9.0/IPCChild.csproj.CoreCompileInputs.cache
+/home/daniel/Downloads/IPCChild/obj/Debug/net9.0/IPCChild.dll
+/home/daniel/Downloads/IPCChild/obj/Debug/net9.0/refint/IPCChild.dll
+/home/daniel/Downloads/IPCChild/obj/Debug/net9.0/IPCChild.pdb
+/home/daniel/Downloads/IPCChild/obj/Debug/net9.0/IPCChild.genruntimeconfig.cache
+/home/daniel/Downloads/IPCChild/obj/Debug/net9.0/ref/IPCChild.dll

@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-class BankAccount
+internal class BankAccount
 {
     private int balance;
     private Mutex _mutex = new Mutex();  // Mutex for thread-safe balance access
@@ -83,9 +83,9 @@ public void Withdraw(int amount)
 
 }
 
-class Program
+internal class Program
 {
-    static void TransferWithDeadlock(BankAccount from, BankAccount to, int amount) //Transfer that causes Deadlock
+    private static void TransferWithDeadlock(BankAccount from, BankAccount to, int amount) //Transfer that causes Deadlock
     {
         Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Attempting to transfer {amount}...");
 
@@ -118,7 +118,7 @@ class Program
         }
     }
 
-    static void TransferSafe(BankAccount from, BankAccount to, int amount) //Transfer w/o deadlock
+    private static void TransferSafe(BankAccount from, BankAccount to, int amount) //Transfer w/o deadlock
 {
     BankAccount first = from.GetHashCode() < to.GetHashCode() ? from : to;
     BankAccount second = from.GetHashCode() < to.GetHashCode() ? to : from;
@@ -154,7 +154,7 @@ class Program
 
 
 
-    static void Main()
+    private static void Main()
     {
         BankAccount account1 = new BankAccount(100);
         BankAccount account2 = new BankAccount(100);

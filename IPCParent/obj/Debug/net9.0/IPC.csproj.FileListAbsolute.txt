@@ -1,0 +1,14 @@
+/home/daniel/Downloads/IPCParent/bin/Debug/net9.0/IPC
+/home/daniel/Downloads/IPCParent/bin/Debug/net9.0/IPC.deps.json
+/home/daniel/Downloads/IPCParent/bin/Debug/net9.0/IPC.runtimeconfig.json
+/home/daniel/Downloads/IPCParent/bin/Debug/net9.0/IPC.dll
+/home/daniel/Downloads/IPCParent/bin/Debug/net9.0/IPC.pdb
+/home/daniel/Downloads/IPCParent/obj/Debug/net9.0/IPC.GeneratedMSBuildEditorConfig.editorconfig
+/home/daniel/Downloads/IPCParent/obj/Debug/net9.0/IPC.AssemblyInfoInputs.cache
+/home/daniel/Downloads/IPCParent/obj/Debug/net9.0/IPC.AssemblyInfo.cs
+/home/daniel/Downloads/IPCParent/obj/Debug/net9.0/IPC.csproj.CoreCompileInputs.cache
+/home/daniel/Downloads/IPCParent/obj/Debug/net9.0/IPC.dll
+/home/daniel/Downloads/IPCParent/obj/Debug/net9.0/refint/IPC.dll
+/home/daniel/Downloads/IPCParent/obj/Debug/net9.0/IPC.pdb
+/home/daniel/Downloads/IPCParent/obj/Debug/net9.0/IPC.genruntimeconfig.cache
+/home/daniel/Downloads/IPCParent/obj/Debug/net9.0/ref/IPC.dll
