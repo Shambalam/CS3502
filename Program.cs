@@ -85,48 +85,74 @@ public void Withdraw(int amount)
 
 class Program
 {
-    static void Transfer(BankAccount from, BankAccount to, int amount)
+    static void TransferWithDeadlock(BankAccount from, BankAccount to, int amount) //Transfer that causes Deadlock
     {
-        Console.WriteLine($"Attempting to transfer {amount}...");
+        Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Attempting to transfer {amount}...");
 
-        bool fromLocked = false, toLocked = false;
+        from.GetMutex().WaitOne();  // Lock the first account
+        Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Locked first account");
+
+        Thread.Sleep(500);  // Simulate delay to increase deadlock chance
+
+        to.GetMutex().WaitOne();  // Lock the second account
+        Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Locked second account");
 
         try
         {
-            fromLocked = from.GetMutex().WaitOne(1000); // Try acquiring first lock
-            if (!fromLocked)
-            {
-                Console.WriteLine("Failed to lock first account, retrying...");
-                return;
-            }
-
-            Thread.Sleep(100);  // Simulate delay to potentially cause deadlock
-
-            toLocked = to.GetMutex().WaitOne(1000); // Try acquiring second lock
-            if (!toLocked)
-            {
-                Console.WriteLine("Failed to lock second account, retrying...");
-                return;
-            }
-
-            // Critical section
             if (from.GetBalance() >= amount)
             {
                 from.SetBalance(from.GetBalance() - amount);
                 to.SetBalance(to.GetBalance() + amount);
-                Console.WriteLine($"Transferred {amount}. New balances - From: {from.GetBalance()}, To: {to.GetBalance()}");
+                Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Transferred {amount}. New balances - From: {from.GetBalance()}, To: {to.GetBalance()}");
             }
             else
             {
-                Console.WriteLine($"Transfer failed due to insufficient funds. From balance: {from.GetBalance()}");
+                Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Transfer failed due to insufficient funds. From balance: {from.GetBalance()}");
             }
         }
         finally
         {
-            if (fromLocked) from.GetMutex().ReleaseMutex();
-            if (toLocked) to.GetMutex().ReleaseMutex();
+            from.GetMutex().ReleaseMutex();
+            to.GetMutex().ReleaseMutex();
+            Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Released both locks");
         }
     }
+
+    static void TransferSafe(BankAccount from, BankAccount to, int amount) //Transfer w/o deadlock
+{
+    BankAccount first = from.GetHashCode() < to.GetHashCode() ? from : to;
+    BankAccount second = from.GetHashCode() < to.GetHashCode() ? to : from;
+
+    first.GetMutex().WaitOne();
+    Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Locked first account");
+
+    Thread.Sleep(100);  // Simulate delay
+
+    second.GetMutex().WaitOne();
+    Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Locked second account");
+
+    try
+    {
+        if (from.GetBalance() >= amount)
+        {
+            from.SetBalance(from.GetBalance() - amount);
+            to.SetBalance(to.GetBalance() + amount);
+            Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Transferred {amount}. New balances - From: {from.GetBalance()}, To: {to.GetBalance()}");
+        }
+        else
+        {
+            Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Transfer failed due to insufficient funds. From balance: {from.GetBalance()}");
+        }
+    }
+    finally
+    {
+        first.GetMutex().ReleaseMutex();
+        second.GetMutex().ReleaseMutex();
+        Console.WriteLine($"[Thread {Thread.CurrentThread.ManagedThreadId}] Released both locks");
+    }
+}
+
+
 
     static void Main()
     {
@@ -139,10 +165,12 @@ class Program
             new Thread(() => account1.Withdraw(30)),
             new Thread(() => account2.Deposit(20)),
             new Thread(() => account2.Withdraw(40)),
-            new Thread(() => Transfer(account1, account2, 50)),  // Transfer money
-            new Thread(() => Transfer(account2, account1, 20)),   // Transfer in opposite direction
+            new Thread(() => TransferSafe(account1, account2, 50)),  // Transfer money
+            new Thread(() => TransferSafe(account2, account1, 20)),   // Transfer in opposite direction
             new Thread(() => account1.SetBalance(200)),  // Manually update balance
-            new Thread(() => account2.SetBalance(300))   // Manually update balance
+            new Thread(() => account2.SetBalance(300)),   // Manually update balance
+            new Thread(() => account1.Withdraw(500)),
+            new Thread(() => account2.Withdraw(500))    // Should cause insufficient funds
         };
 
         foreach (Thread t in threads) t.Start();
